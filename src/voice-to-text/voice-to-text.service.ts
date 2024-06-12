@@ -8,7 +8,7 @@ export class VoiceToTextService {
 
     constructor() {
         this.openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY,
+            apiKey: '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',
         });
     }
 
@@ -36,7 +36,7 @@ export class VoiceToTextService {
 
     async texttojson(text: string): Promise<any> {
         const openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY,
+            apiKey: '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',
         });
 
         const response = await openai.chat.completions.create({

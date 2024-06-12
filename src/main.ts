@@ -15,7 +15,7 @@ async function bootstrap() {
   }));
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
-  await app.listen(process.env.PORT || 3001, '0.0.0.0');
+  await app.listen(process.env.PORT || 3000, '0.0.0.0');
 
 }
 bootstrap();
