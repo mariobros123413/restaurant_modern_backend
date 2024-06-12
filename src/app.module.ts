@@ -10,31 +10,29 @@ import { PedidoModule } from './pedido/pedido.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [MulterModule.register({
-    dest: './uploads', // Directorio donde se guardarán los archivos
-  }),
-  ConfigModule.forRoot({
-    isGlobal: true, // Hacer que las variables de configuración sean globales
-    envFilePath: '.env', // Especificar el archivo de variables de entorno
-  }),
-  TypeOrmModule.forRootAsync({
-    imports: [ConfigModule],
-    useFactory: (configService: ConfigService) => {
-      const dbUrl = configService.get<string>('DATABASE_URL');
-      console.log('DATABASE_URL:', dbUrl); // Log para verificar la URL
-      return {
-        type: 'postgres',
-        url: dbUrl,
-        entities: [pedido],
-        synchronize: true,
-        logging: true,
-        ssl: {
-          rejectUnauthorized: false, // Esto ignora la validación del certificado, asegúrate de revisar si necesitas una configuración más segura
-        },
-      };
-    },
-    inject: [ConfigService],
-  }),
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // Hacer que las variables de configuración sean globales
+      envFilePath: '.env', // Especificar el archivo de variables de entorno
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        const dbUrl = configService.get<string>('DATABASE_URL');
+        console.log('DATABASE_URL:', dbUrl); // Log para verificar la URL
+        return {
+          type: 'postgres',
+          url: dbUrl,
+          entities: [pedido],
+          synchronize: true,
+          logging: true,
+          ssl: {
+            rejectUnauthorized: false, // Esto ignora la validación del certificado, asegúrate de revisar si necesitas una configuración más segura
+          },
+        };
+      },
+      inject: [ConfigService],
+    }),
     VoiceToTextModule,
     SocketgatewayModule,
     PedidoModule],

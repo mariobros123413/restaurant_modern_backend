@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { OpenAI } from 'openai';
 import * as fs from 'fs';
 
@@ -13,24 +13,25 @@ export class VoiceToTextService {
     }
 
     async convertAudioToText(file: Express.Multer.File): Promise<any> {
+        if (!file) {
+            throw new HttpException('File is required', HttpStatus.BAD_REQUEST);
+        }
+        const filePath = `/tmp/${file.originalname}`;
+        fs.writeFileSync(filePath, file.buffer);
 
-        const filePath = file.path; // path donde Multer guardó el archivo
-        console.log("path : " + filePath);
+
         try {
             const transcription = await this.openai.audio.transcriptions.create({
-                file: fs.createReadStream(filePath),
+                file: fs.createReadStream(filePath), // Proporcionar la ruta del archivo al servicio
                 model: "whisper-1",
             });
 
-            // Opcional: eliminar el archivo después de procesar
-            fs.unlinkSync(filePath);
-            console.log("---------------" + transcription.text);
-            const jsontext = this.texttojson(transcription.text);
-
-            return jsontext; // Asegúrate de acceder correctamente a la propiedad donde se encuentra el texto
+            const text = transcription.text;
+            const jsontext = this.texttojson(text);
+            return jsontext;
         } catch (error) {
             console.error('Error processing audio file:', error);
-            throw new Error('Failed to convert audio to text');
+            throw new HttpException('Failed to convert audio to text', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
