@@ -1,5 +1,5 @@
 {
-    "buildCommand": "build --output public",
+    "buildCommand": "nest build --output public",
     "outputDirectory": "build",
     "public": true
   }
