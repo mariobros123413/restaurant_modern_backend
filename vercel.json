@@ -1,0 +1,5 @@
+{
+    "buildCommand": "nestjs build",
+    "outputDirectory": "build",
+    "public": true
+  }
