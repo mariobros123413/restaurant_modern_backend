@@ -23,7 +23,7 @@ export class PedidoService {
             const pedidosCreados = [];
             for (const pedido of pedidos) {
                 const { id_mesero, nro_mesa, nombre_comensal, fecha, hora, plato, bebida, extras } = pedido;
-                const pedidoc = this.pedidoRepository.create({ id_mesero, nro_mesa, nombre_comensal, fecha: fecha, hora: hora, estado: false, plato, bebida, extras });
+                const pedidoc = this.pedidoRepository.create({ id_mesero:1, nro_mesa, nombre_comensal, fecha: fecha, hora: hora, estado: false, plato, bebida, extras });
                 const pedidoGuardado = await this.pedidoRepository.save(pedidoc);
                 pedidosCreados.push(pedidoGuardado);
             }

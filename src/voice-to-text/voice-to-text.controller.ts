@@ -10,7 +10,16 @@ export class VoiceToTextController {
     ) { }
 
     @Post()
-    @UseInterceptors(FileInterceptor('file'))
+    @UseInterceptors(FileInterceptor('file', {
+        storage: diskStorage({
+            destination: './uploads',
+            filename: (req, file, callback) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+                const extension = extname(file.originalname);
+                callback(null, `${uniqueSuffix}${extension}`);
+            }
+        })
+    }))
     async uploadFileAndConvertToText(@UploadedFile() file: Express.Multer.File): Promise<any> {
         if (!file) {
             throw new HttpException('File is required', HttpStatus.BAD_REQUEST);
@@ -18,6 +27,7 @@ export class VoiceToTextController {
 
         try {
             const text = await this.voiceToTextService.convertAudioToText(file);
+            this.socketGateway.emitText(text);
             return text;
         } catch (error) {
             throw new HttpException('Error processing file', HttpStatus.INTERNAL_SERVER_ERROR);
