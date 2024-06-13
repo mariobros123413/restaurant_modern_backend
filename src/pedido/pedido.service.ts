@@ -8,9 +8,9 @@ export class PedidoService {
         private pedidoRepository: Repository<pedido>
     ) { }
 
-    async crearPedido(id_mesero: number, nro_mesa: number, nombre_comensal: string, plato: string, bebida: string, extras: string) {
+    async crearPedido(id_mesero: number, nro_mesa: number, nombre_comensal: string, plato: string, bebida: string, extras: string, fecha: string) {
         try {
-            const pedidoc = this.pedidoRepository.create({ id_mesero, nro_mesa, nombre_comensal, fecha: new Date().toLocaleDateString(), hora: new Date().toLocaleTimeString(), estado: false, plato, bebida, extras });
+            const pedidoc = this.pedidoRepository.create({ id_mesero, nro_mesa, nombre_comensal, fecha: fecha, hora: new Date().toLocaleTimeString(), estado: false, plato, bebida, extras });
             await this.pedidoRepository.save(pedidoc);
             return 'success';
         } catch (error) {

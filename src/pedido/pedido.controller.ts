@@ -10,7 +10,7 @@ export class PedidoController {
     @Post()
     async crearPedido(@Body() body: any): Promise<any> {
         try {
-            const pedido = await this.pedidoService.crearPedido(body.id_mesero, body.nro_mesa, body.nombre_comensal, body.plato, body.bebida, body.extras);
+            const pedido = await this.pedidoService.crearPedido(body.id_mesero, body.nro_mesa, body.nombre_comensal, body.plato, body.bebida, body.extras, body.fecha);
             return pedido;
         } catch (error
         ) {
