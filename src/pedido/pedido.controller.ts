@@ -45,4 +45,15 @@ export class PedidoController {
             throw new NotFoundException('No se pudo obtener los pedidos');
         }
     }
+
+    @Put(':nro')
+    async updatePedido(@Param('nro') nro: number, @Body('estado') nuevoEstado: boolean,
+    ): Promise<any> {
+        try {
+            const pedidos = await this.pedidoService.updatePedido(nro, nuevoEstado);
+            return pedidos;
+        } catch (error) {
+            throw new NotFoundException('No se pudo obtener los pedidos');
+        }
+    }
 }

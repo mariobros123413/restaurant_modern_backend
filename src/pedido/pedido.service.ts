@@ -23,7 +23,7 @@ export class PedidoService {
             const pedidosCreados = [];
             for (const pedido of pedidos) {
                 const { id_mesero, nro_mesa, nombre_comensal, fecha, hora, plato, bebida, extras } = pedido;
-                const pedidoc = this.pedidoRepository.create({ id_mesero:1, nro_mesa, nombre_comensal, fecha: fecha, hora: hora, estado: false, plato, bebida, extras });
+                const pedidoc = this.pedidoRepository.create({ id_mesero: 1, nro_mesa, nombre_comensal, fecha: fecha, hora: hora, estado: false, plato, bebida, extras });
                 const pedidoGuardado = await this.pedidoRepository.save(pedidoc);
                 pedidosCreados.push(pedidoGuardado);
             }
@@ -49,6 +49,21 @@ export class PedidoService {
                 throw new NotFoundException(`Pedido no existe en la lista.`);
             }
             this.pedidoRepository.remove(pedidoExistente);
+        } catch (error) {
+            throw new NotFoundException(`Ocurrió algún error inesperado : ${error.message}.`);
+        }
+    }
+
+    async updatePedido(nro_pedido, nuevoEstado: boolean) {
+        try {
+            const pedidoExistente = await this.pedidoRepository.findOne({ where: { nro_pedido: nro_pedido } });
+            if (!pedidoExistente) {
+                throw new NotFoundException(`Pedido no existe en la lista.`);
+            }
+            pedidoExistente.estado = nuevoEstado; // Asignar el nuevo estado aquí
+
+            // Guardar el pedido actualizado
+            await this.pedidoRepository.save(pedidoExistente);
         } catch (error) {
             throw new NotFoundException(`Ocurrió algún error inesperado : ${error.message}.`);
         }
