@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { PedidoService } from './pedido.service';
 
 @Controller('pedido')
@@ -18,19 +18,19 @@ export class PedidoController {
         }
     }
     @Post('crear-muchos')
-    async crearMuchosPedidos(@Body() pedidos: Array<{ id_mesero: number, nro_mesa: number, nombre_comensal: string, fecha: string, hora: string, plato: string, bebida: string, extras: string }>): Promise<any> {
+    async crearMuchosPedidos(@Body() body: any): Promise<any> {
         try {
-            const pedidosCreados = await this.pedidoService.crearMuchosPedidos(pedidos);
+            const pedidosCreados = await this.pedidoService.crearMuchosPedidos(body.cant);
             return pedidosCreados;
         } catch (error) {
             throw new NotFoundException('No se pudieron crear los pedidos: ' + error);
         }
     }
+
     @Get()
-    async getPedidos() {
+    async getPedidos(@Query('page') page: number, @Query('size') size: number): Promise<any> {
         try {
-            const pedidos = await this.pedidoService.getPedidos();
-            return pedidos;
+            return await this.pedidoService.getPedidos(page, size);
         } catch (error) {
             throw new NotFoundException('No se pudo obtener los pedidos');
         }
