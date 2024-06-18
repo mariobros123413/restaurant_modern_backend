@@ -189,14 +189,14 @@ export class PedidoService {
     }
 
 
-    async getPedidos(page: number, size: number): Promise<{ data: pedido[]; paginaInfo: PaginaInfo }> {
+    async getPedidosP(page: number, size: number): Promise<{ data: pedido[]; paginaInfo: PaginaInfo }> {
         const [pedidos, total] = await this.pedidoRepository.findAndCount({
             order: { nro_pedido: 'ASC' },
             skip: page * size,
             take: size,
         });
         const paginaInfo: PaginaInfo = {
-            totalPaginas: Math.ceil(total / size)-1,
+            totalPaginas: Math.ceil(total / size) - 1,
             totalElementos: total,
             paginaActual: page,
             pageSize: size,
@@ -204,7 +204,15 @@ export class PedidoService {
 
         return { data: pedidos, paginaInfo };
     }
+    async getPedidos() {
+        try {
+            let pedidos = await this.pedidoRepository.find();
+            return pedidos;
+        } catch (error) {
+            throw new NotFoundException(`Error al obtener los pedidos`);
 
+        }
+    }
     async deletePedido(nro_pedido: number) {
         try {
             const pedidoExistente = await this.pedidoRepository.findOne({ where: { nro_pedido: nro_pedido } });

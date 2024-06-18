@@ -27,10 +27,20 @@ export class PedidoController {
         }
     }
 
-    @Get()
-    async getPedidos(@Query('page') page: number, @Query('size') size: number): Promise<any> {
+    @Get('/paginacion')
+    async getPedidosP(@Query('page') page: number, @Query('size') size: number): Promise<any> {
         try {
-            return await this.pedidoService.getPedidos(page, size);
+            return await this.pedidoService.getPedidosP(page, size);
+        } catch (error) {
+            throw new NotFoundException('No se pudo obtener los pedidos');
+        }
+    }
+
+    @Get()
+    async getPedidos() {
+        try {
+            const pedidos = await this.pedidoService.getPedidos();
+            return pedidos;
         } catch (error) {
             throw new NotFoundException('No se pudo obtener los pedidos');
         }
